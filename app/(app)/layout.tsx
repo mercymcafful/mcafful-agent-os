@@ -30,6 +30,9 @@ export default async function AppLayout({
           <Link href="/today" className={styles.navLink}>
             Today
           </Link>
+          <Link href="/dashboard" className={styles.navLink}>
+            Dashboard
+          </Link>
           <Link href="/leads" className={styles.navLink}>
             Leads
           </Link>

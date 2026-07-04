@@ -163,3 +163,111 @@ export async function countUpcomingDeadlines(): Promise<number> {
 
   return count ?? 0;
 }
+
+const GCI_GOAL = 460000;
+
+const STAGE_ORDER = [
+  "new_lead",
+  "valuation",
+  "mandate",
+  "live",
+  "otp",
+  "transfer",
+  "registered",
+];
+
+function stagesFrom(stage: string): string[] {
+  const index = STAGE_ORDER.indexOf(stage);
+  return index === -1 ? [] : STAGE_ORDER.slice(index);
+}
+
+export interface Metrics {
+  gci: number;
+  goal: number;
+  mandatesThisMonth: number;
+  otpsAccepted: number;
+  registrations: number;
+  pipelineValue: number;
+  funnel: {
+    leads: number;
+    valuations: number;
+    mandates: number;
+    otps: number;
+    registered: number;
+  };
+}
+
+// All of Mercy's real numbers for the dashboard — RLS scopes every query to
+// the signed-in agent, so this reads only her data. Every count/sum falls
+// back to 0 rather than throwing when a table is empty.
+export async function getMetrics(): Promise<Metrics> {
+  const supabase = createClient();
+
+  const monthStart = new Date();
+  monthStart.setDate(1);
+  const monthStartStr = monthStart.toISOString().slice(0, 10);
+
+  const otpOrLater = ["otp", "transfer", "registered"];
+
+  const [
+    registeredCommissionRes,
+    mandatesMonthRes,
+    otpsRes,
+    registrationsRes,
+    pipelineValueRes,
+    leadsCountRes,
+    valuationsRes,
+    mandatesAllRes,
+  ] = await Promise.all([
+    supabase.from("pipeline_deals").select("commission").eq("stage", "registered"),
+    supabase
+      .from("pipeline_deals")
+      .select("id", { count: "exact", head: true })
+      .in("stage", stagesFrom("mandate"))
+      .gte("created_at", monthStartStr),
+    supabase
+      .from("pipeline_deals")
+      .select("id", { count: "exact", head: true })
+      .in("stage", otpOrLater),
+    supabase
+      .from("pipeline_deals")
+      .select("id", { count: "exact", head: true })
+      .eq("stage", "registered"),
+    supabase.from("pipeline_deals").select("otp_amount").in("stage", ["otp", "transfer"]),
+    supabase.from("leads").select("id", { count: "exact", head: true }),
+    supabase
+      .from("pipeline_deals")
+      .select("id", { count: "exact", head: true })
+      .in("stage", stagesFrom("valuation")),
+    supabase
+      .from("pipeline_deals")
+      .select("id", { count: "exact", head: true })
+      .in("stage", stagesFrom("mandate")),
+  ]);
+
+  const gci = (registeredCommissionRes.data ?? []).reduce(
+    (sum, row) => sum + (Number(row.commission) || 0),
+    0
+  );
+
+  const pipelineValue = (pipelineValueRes.data ?? []).reduce(
+    (sum, row) => sum + (Number(row.otp_amount) || 0),
+    0
+  );
+
+  return {
+    gci,
+    goal: GCI_GOAL,
+    mandatesThisMonth: mandatesMonthRes.count ?? 0,
+    otpsAccepted: otpsRes.count ?? 0,
+    registrations: registrationsRes.count ?? 0,
+    pipelineValue,
+    funnel: {
+      leads: leadsCountRes.count ?? 0,
+      valuations: valuationsRes.count ?? 0,
+      mandates: mandatesAllRes.count ?? 0,
+      otps: otpsRes.count ?? 0,
+      registered: registrationsRes.count ?? 0,
+    },
+  };
+}
