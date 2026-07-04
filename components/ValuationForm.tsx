@@ -24,6 +24,8 @@ export function ValuationForm() {
     {}
   );
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   function updateField(field: keyof ValuationFormData, value: string) {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -32,7 +34,7 @@ export function ValuationForm() {
     }
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     const nextErrors = {
@@ -45,9 +47,28 @@ export function ValuationForm() {
       return;
     }
 
-    // `form` is shaped as { name, contact, suburb, timeline } — the next
-    // step POSTs this exact object to an API.
-    setSubmitted(true);
+    setSubmitting(true);
+    setSubmitError(null);
+
+    try {
+      const response = await fetch("/api/leads", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+
+      if (!response.ok) {
+        throw new Error("Request failed");
+      }
+
+      setSubmitted(true);
+    } catch {
+      setSubmitError(
+        "Something went wrong sending that — please try again, or WhatsApp me directly."
+      );
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   if (submitted) {
@@ -133,8 +154,14 @@ export function ValuationForm() {
         </select>
       </div>
 
-      <button type="submit" className={`btn btn-gold ${styles.submit}`}>
-        Request my free valuation →
+      {submitError && <p className={styles.submitError}>{submitError}</p>}
+
+      <button
+        type="submit"
+        className={`btn btn-gold ${styles.submit}`}
+        disabled={submitting}
+      >
+        {submitting ? "Sending…" : "Request my free valuation →"}
       </button>
     </form>
   );
