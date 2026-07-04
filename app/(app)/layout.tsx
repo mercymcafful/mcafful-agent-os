@@ -33,6 +33,12 @@ export default async function AppLayout({
           <Link href="/leads" className={styles.navLink}>
             Leads
           </Link>
+          <Link href="/listings" className={styles.navLink}>
+            Listings
+          </Link>
+          <Link href="/pipeline" className={styles.navLink}>
+            Pipeline
+          </Link>
         </nav>
 
         <div className={styles.footer}>

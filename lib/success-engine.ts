@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { successPlaybook, type SuccessTask } from "@/lib/success-playbook";
+import { countUpcomingDeadlines } from "@/lib/queries";
 
 export interface TodayTask extends SuccessTask {
   done: boolean;
@@ -48,23 +49,31 @@ async function getHotLeadsDetail(): Promise<string> {
   )}. Call before they call another agent.`;
 }
 
-function getDeadlinesDetail(): string {
-  // No deals table yet — this goes live once the pipeline exists.
-  return "Review any suspensive-condition deadlines due this week.";
+async function getDeadlinesDetail(): Promise<string> {
+  const count = await countUpcomingDeadlines();
+
+  if (count === 0) {
+    return "No deadlines this week — good.";
+  }
+
+  return `${count} suspensive condition${
+    count === 1 ? "" : "s"
+  } due within 7 days — chase them before deals die.`;
 }
 
 export async function getTodayPlan(): Promise<TodayPlan> {
   const supabase = createClient();
   const today = todayDateString();
 
-  const [hotLeadsDetail, doneRowsResult] = await Promise.all([
+  const [hotLeadsDetail, deadlinesDetail, doneRowsResult] = await Promise.all([
     getHotLeadsDetail(),
+    getDeadlinesDetail(),
     supabase.from("daily_tasks").select("task_key, done").eq("task_date", today),
   ]);
 
   const dynamicDetails: Record<string, string> = {
     hot_leads: hotLeadsDetail,
-    deadlines: getDeadlinesDetail(),
+    deadlines: deadlinesDetail,
   };
 
   const doneMap = new Map(

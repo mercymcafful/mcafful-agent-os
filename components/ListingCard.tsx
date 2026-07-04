@@ -1,8 +1,20 @@
-import type { Listing } from "@/lib/listings";
+import type { Listing } from "@/lib/queries";
 import { formatZAR } from "@/lib/format";
 import styles from "./ListingCard.module.css";
 
 export function ListingCard({ listing }: { listing: Listing }) {
+  const locationLine = [listing.address, listing.suburb]
+    .filter(Boolean)
+    .join(", ");
+
+  const metaParts = [
+    listing.beds ? `${listing.beds} bed` : null,
+    listing.baths ? `${listing.baths} bath` : null,
+    listing.garages
+      ? `${listing.garages} garage${listing.garages === 1 ? "" : "s"}`
+      : null,
+  ].filter(Boolean);
+
   return (
     <article className={styles.card}>
       <div className={styles.image} aria-hidden="true">
@@ -21,15 +33,14 @@ export function ListingCard({ listing }: { listing: Listing }) {
         </svg>
       </div>
       <div className={styles.body}>
-        <p className={styles.price}>{formatZAR(listing.price)}</p>
+        <p className={styles.price}>
+          {listing.price != null ? formatZAR(listing.price) : "Price on request"}
+        </p>
         <h3 className={styles.title}>{listing.title}</h3>
-        <p className={styles.location}>
-          {listing.street}, {listing.suburb}
-        </p>
-        <p className={styles.meta}>
-          {listing.beds} bed · {listing.baths} bath · {listing.garages}{" "}
-          garage{listing.garages === 1 ? "" : "s"}
-        </p>
+        {locationLine && <p className={styles.location}>{locationLine}</p>}
+        {metaParts.length > 0 && (
+          <p className={styles.meta}>{metaParts.join(" · ")}</p>
+        )}
       </div>
     </article>
   );
