@@ -40,6 +40,9 @@
 }
 
 .nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
   flex: 1;
 }
 

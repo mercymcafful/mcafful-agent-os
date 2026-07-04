@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
+import { SuccessPlan } from "@/components/SuccessPlan";
 
 export const metadata: Metadata = { title: "Today — McAfful" };
 
 export default function TodayPage() {
-  return <h1>Today — coming next</h1>;
+  return <SuccessPlan />;
 }

@@ -27,6 +27,9 @@ export default async function AppLayout({
         </div>
 
         <nav className={styles.nav}>
+          <Link href="/today" className={styles.navLink}>
+            Today
+          </Link>
           <Link href="/leads" className={styles.navLink}>
             Leads
           </Link>

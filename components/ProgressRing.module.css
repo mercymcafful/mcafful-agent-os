@@ -1,0 +1,14 @@
+.ring {
+  flex-shrink: 0;
+}
+
+.progress {
+  transition: stroke-dashoffset 0.3s ease;
+}
+
+.ringText {
+  font-family: var(--font-fraunces), serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  fill: var(--emerald-deep);
+}
