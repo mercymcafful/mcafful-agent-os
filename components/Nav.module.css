@@ -1,0 +1,121 @@
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(12, 42, 32, 0.92);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(217, 190, 126, 0.18);
+}
+
+.inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 4.5rem;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.monogram {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  background: var(--gold);
+  color: var(--emerald-deep);
+  font-family: var(--font-fraunces), serif;
+  font-weight: 600;
+  font-size: 1.05rem;
+}
+
+.wordmark {
+  font-family: var(--font-fraunces), serif;
+  font-size: 1.2rem;
+  color: var(--ivory);
+  letter-spacing: 0.01em;
+}
+
+.links {
+  display: none;
+}
+
+.link {
+  font-size: 0.95rem;
+  color: var(--ivory);
+  opacity: 0.85;
+  transition: opacity 0.2s ease;
+}
+
+.link:hover {
+  opacity: 1;
+}
+
+.cta {
+  margin-left: 0.5rem;
+}
+
+.burger {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 2.5rem;
+  height: 2.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.burger span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: var(--ivory);
+  border-radius: 2px;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+@media (min-width: 860px) {
+  .links {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .burger {
+    display: none;
+  }
+}
+
+@media (max-width: 859px) {
+  .linksOpen {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    position: absolute;
+    top: 4.5rem;
+    left: 0;
+    right: 0;
+    background: var(--emerald-deep);
+    border-bottom: 1px solid rgba(217, 190, 126, 0.18);
+    padding: 0.5rem 1.25rem 1.5rem;
+  }
+
+  .linksOpen .link {
+    padding: 0.85rem 0;
+    border-bottom: 1px solid rgba(246, 241, 231, 0.08);
+  }
+
+  .linksOpen .cta {
+    margin: 1rem 0 0;
+    align-self: flex-start;
+  }
+}

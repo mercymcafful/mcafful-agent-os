@@ -1,0 +1,92 @@
+.hero {
+  position: relative;
+  background: var(--emerald-deep);
+  overflow: hidden;
+  padding-block: clamp(4rem, 12vw, 7rem);
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      ellipse 60% 50% at 85% 0%,
+      rgba(19, 74, 56, 0.9) 0%,
+      transparent 70%
+    ),
+    repeating-radial-gradient(
+      circle at 20% 30%,
+      rgba(217, 190, 126, 0.05) 0,
+      rgba(217, 190, 126, 0.05) 1px,
+      transparent 1px,
+      transparent 42px
+    );
+  pointer-events: none;
+}
+
+.inner {
+  position: relative;
+  max-width: 44rem;
+}
+
+.eyebrow {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold);
+  opacity: 0;
+  animation: rise 0.7s ease forwards;
+}
+
+.heading {
+  margin-top: 1.25rem;
+  font-size: clamp(2.5rem, 6vw, 4.25rem);
+  line-height: 1.05;
+  font-weight: 500;
+  color: var(--ivory);
+  opacity: 0;
+  animation: rise 0.7s ease 0.1s forwards;
+}
+
+.subtext {
+  margin-top: 1.5rem;
+  max-width: 34rem;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: rgba(246, 241, 231, 0.75);
+  opacity: 0;
+  animation: rise 0.7s ease 0.2s forwards;
+}
+
+.actions {
+  margin-top: 2.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  opacity: 0;
+  animation: rise 0.7s ease 0.3s forwards;
+}
+
+.primary {
+  font-size: 1.1rem;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (min-width: 860px) {
+  .hero {
+    padding-block: clamp(6rem, 14vw, 9rem);
+  }
+}

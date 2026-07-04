@@ -1,0 +1,106 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+}
+
+.label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--emerald-deep);
+  margin-bottom: 0.4rem;
+}
+
+.input,
+.select {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  font-size: 1rem;
+  font-family: var(--font-manrope), sans-serif;
+  color: var(--emerald-deep);
+  background: #fff;
+  border: 1.5px solid rgba(12, 42, 32, 0.15);
+  border-radius: 10px;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input:focus,
+.select:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(217, 190, 126, 0.25);
+}
+
+.inputError {
+  border-color: #b5493a;
+}
+
+.inputError:focus {
+  border-color: #b5493a;
+  box-shadow: 0 0 0 3px rgba(181, 73, 58, 0.18);
+}
+
+.error {
+  margin-top: 0.4rem;
+  font-size: 0.8rem;
+  color: #b5493a;
+}
+
+.select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23134a38'%3E%3Cpath fill-rule='evenodd' d='M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.25 4.25a.75.75 0 01-1.06 0L5.23 8.29a.75.75 0 01.02-1.08z' clip-rule='evenodd'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.9rem center;
+  background-size: 1rem;
+  padding-right: 2.5rem;
+}
+
+.submit {
+  margin-top: 0.5rem;
+  width: 100%;
+  justify-content: center;
+}
+
+.success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding-block: 1.5rem;
+}
+
+.checkmark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  background: var(--gold);
+  color: var(--emerald-deep);
+  margin-bottom: 1.25rem;
+}
+
+.checkIcon {
+  width: 1.75rem;
+  height: 1.75rem;
+}
+
+.successTitle {
+  font-size: 1.4rem;
+  font-weight: 500;
+  color: var(--emerald-deep);
+}
+
+.successText {
+  margin-top: 0.6rem;
+  max-width: 22rem;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: rgba(12, 42, 32, 0.7);
+}

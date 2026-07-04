@@ -1,0 +1,59 @@
+.card {
+  background: var(--ivory);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  box-shadow: 0 4px 16px -8px rgba(12, 42, 32, 0.18);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px -16px rgba(12, 42, 32, 0.28);
+}
+
+.image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 12rem;
+  background: linear-gradient(135deg, var(--emerald) 0%, var(--emerald-deep) 100%);
+}
+
+.houseIcon {
+  width: 3rem;
+  height: 3rem;
+  color: rgba(217, 190, 126, 0.8);
+}
+
+.body {
+  padding: 1.5rem;
+}
+
+.price {
+  font-family: var(--font-fraunces), serif;
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: var(--emerald-deep);
+}
+
+.title {
+  margin-top: 0.5rem;
+  font-family: var(--font-manrope), sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--emerald-deep);
+}
+
+.location {
+  margin-top: 0.35rem;
+  font-size: 0.9rem;
+  color: rgba(12, 42, 32, 0.65);
+}
+
+.meta {
+  margin-top: 0.85rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--emerald);
+}

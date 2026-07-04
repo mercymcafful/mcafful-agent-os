@@ -1,0 +1,75 @@
+.footer {
+  background: var(--emerald-deep);
+  border-top: 1px solid rgba(217, 190, 126, 0.18);
+  padding-block: 3rem;
+}
+
+.inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  text-align: center;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.monogram {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: var(--gold);
+  color: var(--emerald-deep);
+  font-family: var(--font-fraunces), serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.wordmark {
+  font-family: var(--font-fraunces), serif;
+  font-size: 1.05rem;
+  color: var(--ivory);
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+.link {
+  font-size: 0.9rem;
+  color: rgba(246, 241, 231, 0.75);
+  transition: color 0.2s ease;
+}
+
+.link:hover {
+  color: var(--gold);
+}
+
+.compliance {
+  max-width: 32rem;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: rgba(246, 241, 231, 0.5);
+}
+
+@media (min-width: 860px) {
+  .inner {
+    flex-direction: row;
+    justify-content: space-between;
+    text-align: left;
+  }
+
+  .compliance {
+    text-align: right;
+  }
+}
