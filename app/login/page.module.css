@@ -1,0 +1,45 @@
+.page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--emerald-deep);
+  padding: 1.5rem;
+}
+
+.card {
+  width: 100%;
+  max-width: 24rem;
+  background: var(--ivory);
+  border-radius: var(--radius-card);
+  padding: 2.5rem;
+  box-shadow: 0 20px 50px -20px rgba(0, 0, 0, 0.45);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  margin-bottom: 2rem;
+}
+
+.monogram {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  background: var(--gold);
+  color: var(--emerald-deep);
+  font-family: var(--font-fraunces), serif;
+  font-weight: 600;
+  font-size: 1.05rem;
+}
+
+.wordmark {
+  font-family: var(--font-fraunces), serif;
+  font-size: 1.3rem;
+  color: var(--emerald-deep);
+}

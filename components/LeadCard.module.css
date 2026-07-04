@@ -1,0 +1,122 @@
+.card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  background: var(--ivory);
+  border-radius: var(--radius-card);
+  padding: 1.5rem;
+  box-shadow: 0 4px 16px -8px rgba(12, 42, 32, 0.12);
+}
+
+.main {
+  flex: 1;
+  min-width: 0;
+}
+
+.topRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.name {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--emerald-deep);
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.7rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.hot {
+  background: rgba(181, 73, 58, 0.12);
+  color: #b5493a;
+}
+
+.warm {
+  background: rgba(201, 127, 28, 0.15);
+  color: #c97f1c;
+}
+
+.cold {
+  background: rgba(12, 42, 32, 0.08);
+  color: rgba(12, 42, 32, 0.5);
+}
+
+.detail {
+  margin-top: 0.35rem;
+  font-size: 0.9rem;
+  color: rgba(12, 42, 32, 0.65);
+}
+
+.source {
+  display: inline-block;
+  margin-top: 0.6rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--emerald);
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.actionLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1.1rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.actionPrimary {
+  background: var(--gold);
+  color: var(--emerald-deep);
+}
+
+.actionPrimary:hover {
+  background: var(--gold-bright);
+}
+
+.actionSecondary {
+  background: transparent;
+  color: var(--emerald-deep);
+  border: 1.5px solid rgba(12, 42, 32, 0.15);
+}
+
+.actionSecondary:hover {
+  border-color: var(--gold);
+}
+
+@media (max-width: 640px) {
+  .card {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .actions {
+    flex-direction: row;
+  }
+
+  .actionLink {
+    flex: 1;
+  }
+}
