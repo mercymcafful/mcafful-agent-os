@@ -4,6 +4,7 @@ export interface SuccessTask {
   detail?: string;
   impact: string;
   action: string;
+  dynamicKey?: string;
 }
 
 export interface SuccessBlock {
@@ -25,6 +26,7 @@ export const successPlaybook: SuccessBlock[] = [
         detail: "Reach them before another agent does.",
         impact: "Mandate pipeline",
         action: "Call",
+        dynamicKey: "hot_leads",
       },
       {
         id: "power-hour-2",
@@ -119,6 +121,7 @@ export const successPlaybook: SuccessBlock[] = [
         detail: "Deals die on missed dates.",
         impact: "Save the deal",
         action: "Chase",
+        dynamicKey: "deadlines",
       },
       {
         id: "deals-2",

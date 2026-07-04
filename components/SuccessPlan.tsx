@@ -1,33 +1,53 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { successPlaybook } from "@/lib/success-playbook";
+import type { TodayPlan } from "@/lib/success-engine";
 import { ProgressRing } from "./ProgressRing";
 import styles from "./SuccessPlan.module.css";
 
-export function SuccessPlan() {
-  const allTaskIds = useMemo(
-    () => successPlaybook.flatMap((block) => block.tasks.map((task) => task.id)),
-    []
-  );
-  const [checked, setChecked] = useState<Record<string, boolean>>({});
+export function SuccessPlan({ initialPlan }: { initialPlan: TodayPlan }) {
+  const [blocks, setBlocks] = useState(initialPlan.blocks);
 
-  const completedCount = allTaskIds.filter((id) => checked[id]).length;
-  const totalCount = allTaskIds.length;
+  const allTasks = useMemo(
+    () => blocks.flatMap((block) => block.tasks),
+    [blocks]
+  );
+  const completedCount = allTasks.filter((task) => task.done).length;
+  const totalCount = allTasks.length;
   const percent =
     totalCount === 0 ? 0 : Math.round((completedCount / totalCount) * 100);
 
-  function toggleTask(id: string) {
-    setChecked((prev) => ({ ...prev, [id]: !prev[id] }));
+  function setTaskDone(taskKey: string, done: boolean) {
+    setBlocks((prev) =>
+      prev.map((block) => ({
+        ...block,
+        tasks: block.tasks.map((task) =>
+          task.id === taskKey ? { ...task, done } : task
+        ),
+      }))
+    );
+  }
+
+  async function toggleTask(taskKey: string, nextDone: boolean) {
+    setTaskDone(taskKey, nextDone); // optimistic
+
+    try {
+      const response = await fetch("/api/tasks", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ taskKey, done: nextDone }),
+      });
+      if (!response.ok) throw new Error("Failed to save");
+    } catch {
+      setTaskDone(taskKey, !nextDone); // revert on failure
+    }
   }
 
   return (
     <div>
       <div className={styles.banner}>
         <span className={styles.bannerLabel}>Next best action</span>
-        <p className={styles.bannerText}>
-          Call your 3 hottest leads — start your day here.
-        </p>
+        <p className={styles.bannerText}>{initialPlan.bannerDetail}</p>
       </div>
 
       <div className={styles.progressRow}>
@@ -43,37 +63,36 @@ export function SuccessPlan() {
       </div>
 
       <div className={styles.blocks}>
-        {successPlaybook.map((block) => (
+        {blocks.map((block) => (
           <section key={block.key} className={styles.block}>
             <div className={styles.blockHeader}>
               <h2 className={styles.blockTitle}>{block.title}</h2>
               <span className={styles.blockTime}>{block.timeLabel}</span>
             </div>
             <div className={styles.taskList}>
-              {block.tasks.map((task) => {
-                const isDone = Boolean(checked[task.id]);
-                return (
-                  <label
-                    key={task.id}
-                    className={`${styles.task} ${isDone ? styles.taskDone : ""}`}
-                  >
-                    <input
-                      type="checkbox"
-                      checked={isDone}
-                      onChange={() => toggleTask(task.id)}
-                      className={styles.checkbox}
-                    />
-                    <div className={styles.taskBody}>
-                      <p className={styles.taskTitle}>{task.title}</p>
-                      {task.detail && (
-                        <p className={styles.taskDetail}>{task.detail}</p>
-                      )}
-                    </div>
-                    <span className={styles.impactPill}>{task.impact}</span>
-                    <span className={styles.actionLabel}>{task.action}</span>
-                  </label>
-                );
-              })}
+              {block.tasks.map((task) => (
+                <label
+                  key={task.id}
+                  className={`${styles.task} ${
+                    task.done ? styles.taskDone : ""
+                  }`}
+                >
+                  <input
+                    type="checkbox"
+                    checked={task.done}
+                    onChange={() => toggleTask(task.id, !task.done)}
+                    className={styles.checkbox}
+                  />
+                  <div className={styles.taskBody}>
+                    <p className={styles.taskTitle}>{task.title}</p>
+                    {task.detail && (
+                      <p className={styles.taskDetail}>{task.detail}</p>
+                    )}
+                  </div>
+                  <span className={styles.impactPill}>{task.impact}</span>
+                  <span className={styles.actionLabel}>{task.action}</span>
+                </label>
+              ))}
             </div>
           </section>
         ))}
