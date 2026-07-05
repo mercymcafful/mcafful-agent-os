@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import type { CMASubject, CMAComp, CMAResult } from "@/lib/cma";
 
 export interface Lead {
   id: string;
@@ -272,4 +273,53 @@ export async function getMetrics(): Promise<Metrics> {
       registered: registrationsRes.count ?? 0,
     },
   };
+}
+
+export interface SellerLeadOption {
+  id: string;
+  name: string | null;
+  suburb: string | null;
+}
+
+// Seller leads, for the CMA "link to a lead" dropdown.
+export async function getSellerLeads(): Promise<SellerLeadOption[]> {
+  const supabase = createClient();
+
+  const { data, error } = await supabase
+    .from("leads")
+    .select("id, name, suburb")
+    .eq("lead_type", "seller")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data ?? [];
+}
+
+export interface CMA {
+  id: string;
+  agent_id: string;
+  lead_id: string | null;
+  subject: CMASubject;
+  comps: CMAComp[];
+  result: CMAResult | null;
+  created_at: string;
+}
+
+// All of the agent's past CMAs, newest first.
+export async function getCMAs(): Promise<CMA[]> {
+  const supabase = createClient();
+
+  const { data, error } = await supabase
+    .from("cmas")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return (data ?? []) as unknown as CMA[];
 }

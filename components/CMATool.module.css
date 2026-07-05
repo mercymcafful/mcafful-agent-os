@@ -1,0 +1,267 @@
+.header {
+  margin-bottom: 2rem;
+}
+
+.heading {
+  font-size: 1.75rem;
+  font-weight: 500;
+  color: var(--emerald-deep);
+}
+
+.subtitle {
+  margin-top: 0.5rem;
+  font-size: 0.95rem;
+  color: rgba(12, 42, 32, 0.6);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.error {
+  font-size: 0.85rem;
+  color: #b5493a;
+  background: rgba(181, 73, 58, 0.08);
+  border: 1px solid rgba(181, 73, 58, 0.2);
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+}
+
+.section {
+  background: var(--ivory);
+  border-radius: var(--radius-card);
+  padding: 1.5rem 1.75rem;
+  box-shadow: 0 4px 16px -8px rgba(12, 42, 32, 0.1);
+}
+
+.sectionTitle {
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: var(--emerald-deep);
+  margin-bottom: 1rem;
+}
+
+.row2 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.row4 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+}
+
+.label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--emerald-deep);
+  margin-bottom: 0.35rem;
+}
+
+.input,
+.select,
+.textarea {
+  width: 100%;
+  padding: 0.65rem 0.85rem;
+  font-size: 0.9rem;
+  font-family: var(--font-manrope), sans-serif;
+  color: var(--emerald-deep);
+  background: #fff;
+  border: 1.5px solid rgba(12, 42, 32, 0.15);
+  border-radius: 10px;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.inputSmall {
+  composes: input;
+  width: 4.5rem;
+}
+
+.input:focus,
+.select:focus,
+.textarea:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(217, 190, 126, 0.25);
+}
+
+.textarea {
+  resize: vertical;
+}
+
+.compsHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.addButton {
+  background: none;
+  border: 1.5px solid rgba(12, 42, 32, 0.15);
+  border-radius: var(--radius-pill);
+  padding: 0.4rem 0.9rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--emerald-deep);
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.addButton:hover {
+  border-color: var(--gold);
+}
+
+.compsNote {
+  font-size: 0.85rem;
+  color: rgba(12, 42, 32, 0.55);
+  margin-bottom: 1rem;
+}
+
+.compRow {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.5rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid rgba(12, 42, 32, 0.06);
+}
+
+.compRow:last-child {
+  border-bottom: none;
+}
+
+.removeButton {
+  align-self: flex-end;
+  background: none;
+  border: none;
+  color: #b5493a;
+  font-size: 0.9rem;
+  cursor: pointer;
+  padding: 0.4rem;
+}
+
+.submit {
+  align-self: flex-start;
+}
+
+.resultCard {
+  margin-top: 1.5rem;
+  background: var(--emerald-deep);
+  color: var(--ivory);
+  border-radius: var(--radius-card);
+  padding: 2rem;
+}
+
+.resultLabel {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.resultPrice {
+  margin-top: 0.5rem;
+  font-family: var(--font-fraunces), serif;
+  font-size: 2.5rem;
+  font-weight: 500;
+}
+
+.resultRange {
+  margin-top: 0.4rem;
+  font-size: 0.95rem;
+  color: rgba(246, 241, 231, 0.75);
+}
+
+.resultSubheading {
+  margin-top: 1.5rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--gold);
+}
+
+.resultText {
+  margin-top: 0.5rem;
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: rgba(246, 241, 231, 0.9);
+  white-space: pre-wrap;
+}
+
+.history {
+  margin-top: 2rem;
+}
+
+.empty {
+  background: var(--ivory);
+  border-radius: var(--radius-card);
+  padding: 2rem;
+  text-align: center;
+  color: rgba(12, 42, 32, 0.55);
+  font-size: 0.9rem;
+}
+
+.historyList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.historyRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  background: var(--ivory);
+  border-radius: 12px;
+  padding: 0.85rem 1.25rem;
+  font-size: 0.9rem;
+}
+
+.historyAddress {
+  font-weight: 600;
+  color: var(--emerald-deep);
+  flex: 1;
+}
+
+.historyPrice {
+  font-weight: 700;
+  color: var(--emerald);
+}
+
+.historyDate {
+  color: rgba(12, 42, 32, 0.5);
+  font-size: 0.8rem;
+}
+
+@media (min-width: 640px) {
+  .row2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .compRow {
+    grid-template-columns: 1.4fr 1fr 1fr 0.6fr 0.6fr 1fr 1fr auto;
+    align-items: center;
+  }
+
+  .removeButton {
+    align-self: center;
+  }
+}
+
+@media (min-width: 900px) {
+  .row4 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}

@@ -42,6 +42,9 @@ export default async function AppLayout({
           <Link href="/pipeline" className={styles.navLink}>
             Pipeline
           </Link>
+          <Link href="/cma" className={styles.navLink}>
+            CMA
+          </Link>
         </nav>
 
         <div className={styles.footer}>
