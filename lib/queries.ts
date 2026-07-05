@@ -11,6 +11,8 @@ export interface Lead {
   temperature: string;
   status: string;
   created_at: string;
+  lead_type: string | null;
+  summary: string | null;
 }
 
 export async function getLeads(): Promise<Lead[]> {

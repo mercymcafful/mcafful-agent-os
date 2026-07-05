@@ -1,4 +1,6 @@
 import { supabaseAdmin } from "@/lib/supabase/admin";
+import { qualifyLead } from "@/lib/qualify";
+import { sendText } from "@/lib/whatsapp";
 
 // Meta calls this to verify the webhook belongs to you before it will
 // deliver any messages.
@@ -54,17 +56,33 @@ export async function POST(request: Request) {
       .maybeSingle();
 
     if (!existingLead) {
+      const qualified = text
+        ? await qualifyLead(text)
+        : {
+            lead_type: "unknown" as const,
+            suburb: null,
+            temperature: "warm" as const,
+            summary: "No message text (non-text message type)",
+          };
+
       const { error } = await supabaseAdmin.from("leads").insert({
         agent_id: process.env.AGENT_ID,
         name: profileName,
         contact: phone,
         source: "whatsapp",
-        temperature: "warm",
+        temperature: qualified.temperature,
         status: "new",
+        lead_type: qualified.lead_type,
+        suburb: qualified.suburb,
+        summary: qualified.summary,
       });
 
       if (error) {
         console.error("WhatsApp webhook: failed to insert lead:", error.message);
+      } else {
+        const reply =
+          "Thanks for reaching out to McAfful — this is Mercy's line. I've got your message and will reply personally shortly. Meanwhile you can browse current homes on the website.";
+        await sendText(phone, reply);
       }
     }
   } catch (error) {

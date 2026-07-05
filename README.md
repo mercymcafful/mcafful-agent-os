@@ -27,3 +27,13 @@ a Meta Business app with the WhatsApp product added.
 This webhook must be reachable over public HTTPS — it will not verify against
 `localhost`. Test it on a deployed URL (Vercel is the easy path for a Next.js
 app) or through a tunnel like ngrok.
+
+### AI auto-reply
+
+Inbound messages get an automatic first reply and are qualified (buyer/seller,
+suburb, temperature) by Claude before being saved as a lead. This is only
+possible because WhatsApp allows free-form replies within the 24-hour window
+opened by a customer-initiated message — the system never cold-messages
+anyone. Meta's rules also require AI to perform a concrete task (qualifying,
+answering) rather than open-ended chat, which is exactly what this does: it
+qualifies and hands off, it doesn't hold a conversation.
