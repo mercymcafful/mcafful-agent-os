@@ -1,3 +1,5 @@
+import "server-only";
+
 // Sends a free-form WhatsApp text reply via the Graph API. Only valid within
 // the 24-hour window opened by the customer's own inbound message. Never
 // throws — a failed reply must not break lead capture.
