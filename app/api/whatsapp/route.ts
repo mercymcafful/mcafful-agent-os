@@ -1,5 +1,5 @@
 import { supabaseAdmin } from "@/lib/supabase/admin";
-import { qualifyLead } from "@/lib/qualify";
+import { qualifyAndReply, FALLBACK_REPLY, type ListingContext } from "@/lib/qualify";
 import { sendText } from "@/lib/whatsapp";
 
 // Meta calls this to verify the webhook belongs to you before it will
@@ -26,6 +26,25 @@ interface WhatsAppWebhookBody {
       };
     }[];
   }[];
+}
+
+// The AI reply is grounded only in the agent's current active listings —
+// fetched fresh per inbound message so it never quotes a sold/withdrawn
+// listing. Falls back to an empty list (conversational-only reply) if the
+// fetch fails, rather than blocking the whole webhook.
+async function getActiveListingsContext(): Promise<ListingContext[]> {
+  const { data, error } = await supabaseAdmin
+    .from("listings")
+    .select("suburb, address, price, beds, baths")
+    .eq("status", "active")
+    .eq("agent_id", process.env.AGENT_ID);
+
+  if (error) {
+    console.error("WhatsApp webhook: failed to fetch listings:", error.message);
+    return [];
+  }
+
+  return data ?? [];
 }
 
 // Meta delivers inbound messages (and status updates, which we ignore) here.
@@ -57,12 +76,13 @@ export async function POST(request: Request) {
 
     if (!existingLead) {
       const qualified = text
-        ? await qualifyLead(text)
+        ? await qualifyAndReply(text, await getActiveListingsContext())
         : {
             lead_type: "unknown" as const,
             suburb: null,
             temperature: "warm" as const,
             summary: "No message text (non-text message type)",
+            reply: FALLBACK_REPLY,
           };
 
       const { error } = await supabaseAdmin.from("leads").insert({
@@ -80,9 +100,7 @@ export async function POST(request: Request) {
       if (error) {
         console.error("WhatsApp webhook: failed to insert lead:", error.message);
       } else {
-        const reply =
-          "Thanks for reaching out to McAfful — this is Mercy's line. I've got your message and will reply personally shortly. Meanwhile you can browse current homes on the website.";
-        await sendText(phone, reply);
+        await sendText(phone, qualified.reply);
       }
     }
   } catch (error) {
