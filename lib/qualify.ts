@@ -3,11 +3,20 @@ import Anthropic from "@anthropic-ai/sdk";
 
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
-export interface QualifiedLead {
+export interface ListingContext {
+  suburb: string | null;
+  address: string | null;
+  price: number | null;
+  beds: number | null;
+  baths: number | null;
+}
+
+export interface QualifiedReply {
   lead_type: "seller" | "buyer" | "unknown";
   suburb: string | null;
   temperature: "hot" | "warm" | "cold";
   summary: string;
+  reply: string;
 }
 
 const FARMING_AREAS = [
@@ -25,30 +34,54 @@ const FARMING_AREAS = [
   "Glenferness",
 ];
 
-const SYSTEM_PROMPT = `You qualify inbound property leads for a Midrand estate agent whose farming area is: ${FARMING_AREAS.join(
-  ", "
-)}.
+export const FALLBACK_REPLY =
+  "Thanks for reaching out — this is Mercy Baloyi. I've received your message and will get back to you personally shortly.";
+
+// Backwards compatibility: old QualifiedLead interface for existing code
+export interface QualifiedLead {
+  lead_type: "seller" | "buyer" | "unknown";
+  suburb: string | null;
+  temperature: "hot" | "warm" | "cold";
+  summary: string;
+}
+
+function buildSystemPrompt(listings: ListingContext[]): string {
+  return `You are replying on WhatsApp as Mercy Baloyi, an independent estate agent whose farming area is: ${FARMING_AREAS.join(
+    ", "
+  )}.
+
+Current active listings — the ONLY facts you may use when answering questions about specific properties. Never invent a price, address, suburb, or availability that isn't in this list. If nothing here answers the question, say so honestly rather than guessing:
+${JSON.stringify(listings)}
+
+Do two things from the lead's inbound WhatsApp message:
+1. Qualify the lead.
+2. Write a short WhatsApp reply (2-4 sentences) that directly answers what they asked. Sign off naturally as Mercy Baloyi. Never mention any agency name or affiliation.
 
 Return ONLY minified JSON (no prose, no code fences) shaped exactly:
-{"lead_type":"seller|buyer|unknown","suburb":string|null,"temperature":"hot|warm|cold","summary":"one short line"}
+{"lead_type":"seller|buyer|unknown","suburb":string|null,"temperature":"hot|warm|cold","summary":"one short line","reply":"the WhatsApp reply text"}
 
 Where hot = ready to act/wants a valuation/ready to list, warm = interested but no urgency, cold = just browsing.`;
+}
 
-function safeDefault(message: string): QualifiedLead {
+function safeDefault(message: string): QualifiedReply {
   return {
     lead_type: "unknown",
     suburb: null,
     temperature: "warm",
     summary: message.slice(0, 120),
+    reply: FALLBACK_REPLY,
   };
 }
 
-export async function qualifyLead(message: string): Promise<QualifiedLead> {
+export async function qualifyAndReply(
+  message: string,
+  listings: ListingContext[]
+): Promise<QualifiedReply> {
   try {
     const response = await anthropic.messages.create({
       model: "claude-haiku-4-5-20251001",
-      max_tokens: 300,
-      system: SYSTEM_PROMPT,
+      max_tokens: 500,
+      system: buildSystemPrompt(listings),
       messages: [{ role: "user", content: message }],
     });
 
@@ -60,12 +93,12 @@ export async function qualifyLead(message: string): Promise<QualifiedLead> {
     const cleaned = block.text.replace(/```json|```/g, "").trim();
     const parsed = JSON.parse(cleaned);
 
-    const leadType: QualifiedLead["lead_type"] =
+    const leadType: QualifiedReply["lead_type"] =
       parsed?.lead_type === "seller" || parsed?.lead_type === "buyer"
         ? parsed.lead_type
         : "unknown";
 
-    const temperature: QualifiedLead["temperature"] =
+    const temperature: QualifiedReply["temperature"] =
       parsed?.temperature === "hot" || parsed?.temperature === "cold"
         ? parsed.temperature
         : "warm";
@@ -78,9 +111,25 @@ export async function qualifyLead(message: string): Promise<QualifiedLead> {
         ? parsed.summary
         : message.slice(0, 120);
 
-    return { lead_type: leadType, suburb, temperature, summary };
+    const reply: string =
+      typeof parsed?.reply === "string" && parsed.reply.trim() !== ""
+        ? parsed.reply
+        : FALLBACK_REPLY;
+
+    return { lead_type: leadType, suburb, temperature, summary, reply };
   } catch (error) {
-    console.error("qualifyLead error:", error);
+    console.error("qualifyAndReply error:", error);
     return safeDefault(message);
   }
+}
+
+// Backwards compatibility: old qualifyLead function for existing code
+export async function qualifyLead(message: string): Promise<QualifiedLead> {
+  const result = await qualifyAndReply(message, []);
+  return {
+    lead_type: result.lead_type,
+    suburb: result.suburb,
+    temperature: result.temperature,
+    summary: result.summary,
+  };
 }
