@@ -37,14 +37,6 @@ const FARMING_AREAS = [
 export const FALLBACK_REPLY =
   "Thanks for reaching out — this is Mercy Baloyi. I've received your message and will get back to you personally shortly.";
 
-// Backwards compatibility: old QualifiedLead interface for existing code
-export interface QualifiedLead {
-  lead_type: "seller" | "buyer" | "unknown";
-  suburb: string | null;
-  temperature: "hot" | "warm" | "cold";
-  summary: string;
-}
-
 function buildSystemPrompt(listings: ListingContext[]): string {
   return `You are replying on WhatsApp as Mercy Baloyi, an independent estate agent whose farming area is: ${FARMING_AREAS.join(
     ", "
@@ -121,15 +113,4 @@ export async function qualifyAndReply(
     console.error("qualifyAndReply error:", error);
     return safeDefault(message);
   }
-}
-
-// Backwards compatibility: old qualifyLead function for existing code
-export async function qualifyLead(message: string): Promise<QualifiedLead> {
-  const result = await qualifyAndReply(message, []);
-  return {
-    lead_type: result.lead_type,
-    suburb: result.suburb,
-    temperature: result.temperature,
-    summary: result.summary,
-  };
 }
